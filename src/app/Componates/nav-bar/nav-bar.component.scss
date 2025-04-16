@@ -1,0 +1,24 @@
+// @use '@angular/material' as mat;
+
+// // Customize the entire app. Change :root to your selector if you want to scope the styles.
+// .one {
+//   @include mat.toolbar-overrides((
+//     container-background-color: orange,
+//     container-text-color: red,
+//     title-text-line-height:20px,
+//   ));
+// }
+.one{
+  background-color:#232f34;
+  color: #f9AA33;
+  flex-wrap: wrap;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+.nav{
+  margin-left: 60%;
+  justify-content: center ;
+}
+
+
