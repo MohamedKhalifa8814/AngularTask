@@ -1,29 +1,25 @@
 <div class="product-container">
-  <!-- Header Section -->
   <div class="header">
     <h2>Products</h2>
     <div class="filter-container">
       <mat-form-field appearance="outline">
         <mat-label>Filter products</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Search by title or description"
-          [disabled]="isLoading()">
-        <mat-icon matSuffix>search</mat-icon>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search by title" [disabled]="isLoading()">
         @if (isFiltering()) {
         <mat-spinner matSuffix diameter="20"></mat-spinner>
+        } @else {
+        <mat-icon matSuffix>search</mat-icon>
         }
       </mat-form-field>
     </div>
   </div>
 
-  <!-- Loading Progress Bar -->
   @if (isLoading()) {
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
   }
 
-  <!-- Table Container -->
   <div class="mat-elevation-z8 demo-table">
-    @if (isLoading() && dataSource.data.length === 0) {
-    <!-- Skeleton Loader -->
+    @if ((isLoading()|| isFiltering()) && dataSource.data.length === 0 ) {
     <div class="skeleton-loader">
       @for (row of [1,2,3,4,5]; track row) {
       <div class="skeleton-row">
@@ -34,34 +30,28 @@
       }
     </div>
     } @else {
-    <!-- Actual Table -->
     <table mat-table [dataSource]="dataSource">
 
-      <!-- ID Column -->
       <ng-container matColumnDef="demo-id">
         <th mat-header-cell *matHeaderCellDef>Id</th>
         <td mat-cell *matCellDef="let product">{{product.id}}</td>
       </ng-container>
 
-      <!-- Title Column -->
       <ng-container matColumnDef="demo-title">
         <th mat-header-cell *matHeaderCellDef>Title</th>
         <td mat-cell *matCellDef="let product">{{product.title}}</td>
       </ng-container>
 
-      <!-- Description Column -->
       <ng-container matColumnDef="demo-description">
         <th mat-header-cell *matHeaderCellDef>Description</th>
         <td mat-cell *matCellDef="let product">{{product.description | slice:0:50}}...</td>
       </ng-container>
 
-      <!-- Price Column -->
       <ng-container matColumnDef="demo-price">
         <th mat-header-cell *matHeaderCellDef>Price</th>
         <td mat-cell *matCellDef="let product">{{product.price | currency}}</td>
       </ng-container>
 
-      <!-- Rating Column -->
       <ng-container matColumnDef="demo-rating">
         <th mat-header-cell *matHeaderCellDef>Rating</th>
         <td mat-cell *matCellDef="let product">
@@ -75,13 +65,11 @@
         </td>
       </ng-container>
 
-      <!-- Tags Column -->
       <ng-container matColumnDef="demo-tags">
         <th mat-header-cell *matHeaderCellDef>Tags</th>
         <td mat-cell *matCellDef="let product">{{product.tags}}</td>
       </ng-container>
 
-      <!-- Brand Column -->
       <ng-container matColumnDef="demo-brand">
         <th mat-header-cell *matHeaderCellDef>Brand</th>
         <td mat-cell *matCellDef="let product">{{product.brand}}</td>
@@ -92,10 +80,14 @@
     </table>
     }
 
-    <!-- Paginator with Loading State -->
     <mat-paginator class="demo-paginator" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
       [length]="dataSource.data.length" [disabled]="isLoading()" (page)="handlePageEvent($event)"
       aria-label="Select page">
     </mat-paginator>
+    @if (isLoading()) {
+    <div class="paginator-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    }
   </div>
 </div>

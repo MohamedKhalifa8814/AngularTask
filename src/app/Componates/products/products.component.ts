@@ -9,10 +9,15 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-products',
-  imports: [MatTableModule, MatInputModule, MatSelectModule, MatFormFieldModule, MatPaginatorModule, MatIconModule, MatProgressBarModule, CommonModule],
+  imports: [MatTableModule, MatInputModule,
+    MatSelectModule, MatFormFieldModule,
+    MatPaginatorModule, MatIconModule,
+    MatProgressSpinnerModule, MatProgressBarModule,
+    CommonModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
@@ -55,10 +60,13 @@ export class ProductsComponent implements OnInit {
     })
   }
   applyFilter(event: Event) {
+    this.isLoading.set(true)
     this.isFiltering.set(true)
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.isFiltering.set(false);
+    this.isLoading.set(false)
+
 
 
     if (this.dataSource.paginator) {
