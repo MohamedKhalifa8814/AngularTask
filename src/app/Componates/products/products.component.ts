@@ -23,7 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
-  displayedColumns: string[] = ['demo-id', 'demo-title', 'demo-description', 'demo-price', 'demo-rating', 'demo-tags', 'demo-brand'];
+  displayedColumns: string[] = ['demo-title', 'demo-description', 'demo-price', 'demo-rating', 'demo-tags', 'demo-brand'];
   dataSource = new MatTableDataSource<Product>([]);
   length = 0;
   pageSize = 10;
