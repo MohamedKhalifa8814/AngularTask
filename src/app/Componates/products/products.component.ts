@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
-import { Product } from '../../classes/products';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild, } from '@angular/core';
+import { IProduct } from '../../Interface/iproducts';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ProductsService } from './products.service';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ProductParams } from '../../Interface/productparams';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-products',
@@ -17,21 +19,28 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule, MatFormFieldModule,
     MatPaginatorModule, MatIconModule,
     MatProgressSpinnerModule, MatProgressBarModule,
-    CommonModule],
+    CommonModule, MatSortModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
-export class ProductsComponent implements OnInit {
-  products: Product[] = [];
-  displayedColumns: string[] = ['demo-title', 'demo-description', 'demo-price', 'demo-rating', 'demo-tags', 'demo-brand'];
-  dataSource = new MatTableDataSource<Product>([]);
-  length = 0;
+export class ProductsComponent implements OnInit, AfterViewInit {
+  products: IProduct[] = [];
+  displayedColumns: string[] = ['id', 'title', 'description', 'price', 'rating', 'tags', 'brand'];
+  dataSource = new MatTableDataSource<IProduct>([]);
+  productParams = new ProductParams;
+  productLength = 0;
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 20];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  search = "";
+  sortBy = "";
+  order = "";
   isLoading = signal(true);
   isFiltering = signal(false);
+
+  // @ViewChild('search') searchTerm!: ElementRef;
+  // @ViewChild(MatPaginator) paginator!: MatPaginator;
+  // @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private productSevice: ProductsService) { }
 
@@ -40,17 +49,20 @@ export class ProductsComponent implements OnInit {
     console.log("dataSource", this.dataSource);
 
   }
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+  ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
   }
 
   getProducts() {
     this.isLoading.set(true)
-    this.productSevice.getAllProducts().subscribe({
+    this.productParams.limit = this.pageSize;
+    this.productParams.skip = this.pageIndex * this.pageSize;
+
+    this.productSevice.getProduct(this.productParams,).subscribe({
       next: (res: any) => {
-        this.products = res.products;
-        this.dataSource.data = this.products;
-        this.length = this.products.length;
+        this.productLength = res.total;
+        this.dataSource.data = res.products;
+
         this.isLoading.set(false)
       },
       error: (err) => {
@@ -59,24 +71,44 @@ export class ProductsComponent implements OnInit {
       }
     })
   }
+  // onSearch(event: Event) {
+  //   this.isLoading.set(true)
+  //   this.isFiltering.set(true)
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.productParams.search = filterValue.trim().toLowerCase();
+  //   this.getProducts();
+  //   this.isFiltering.set(false);
+  //   this.isLoading.set(false)
+  // }
   applyFilter(event: Event) {
-    this.isLoading.set(true)
-    this.isFiltering.set(true)
+    debugger
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    this.isFiltering.set(false);
-    this.isLoading.set(false)
+    this.search = filterValue.trim().toLowerCase();
+    this.isLoading.set(true)
+    this.productSevice.searchProduct(this.search).subscribe({
+      next: (res: any) => {
+        this.productLength = res.total;
+        this.dataSource.data = res.products;
 
+        this.isLoading.set(false)
+      },
 
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    })
   }
-  handlePageEvent(e: PageEvent) {
+  onPageChange(e: PageEvent) {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
+
+    this.getProducts();
   }
+
+  onSortChange(sort: Sort) {
+    debugger;
+    this.productParams.sortBy = sort.active;
+    this.productParams.order = sort.direction;
+    this.getProducts();
+  }
+
   getStarIcon(star: number, rating: number): string {
     if (rating >= star) return 'star';
     if (rating >= star - 0.5) return 'star_half';

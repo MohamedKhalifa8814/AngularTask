@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Product } from '../../classes/products';
+import { IProduct } from '../../Interface/iproducts';
+import { ProductParams } from '../../Interface/productparams';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +12,22 @@ export class ProductsService {
 
   constructor(private http: HttpClient) { }
 
-  getAllProducts() {
-    return this.http.get<Product[]>(this.baseUrl)
+  getProduct(productParams: ProductParams) {
+    let params = new HttpParams
+    params = params.append('sortBy', productParams.sortBy);
+    params = params.append('order', productParams.order);
+
+
+    params = params.append('limit', productParams.limit.toString())
+    params = params.append('skip', productParams.skip.toString())
+    return this.http.get<IProduct>(this.baseUrl, { observe: 'response', params })
+      .pipe(
+        map(response => {
+          return response.body;
+        })
+      )
   }
-  getProductById(id: number) {
-    return this.http.get<Product[]>(this.baseUrl + id)
-  }
-  getProductByTitle(title: string) {
-    return this.http.get<Product[]>(this.baseUrl + title)
+  searchProduct(search: string) {
+    return this.http.get<IProduct[]>(this.baseUrl + "/search?q=" + search)
   }
 }

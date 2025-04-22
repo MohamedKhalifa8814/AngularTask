@@ -31,56 +31,61 @@
 mat-spinner {
   margin: 0 auto;
 }
-.mat-column-demo-id {
+.mat-column-id {
   width: 32px;
   border-right: 1px solid currentColor;
   padding-right: 24px;
   text-align: center;
 }
-.mat-column-demo-title {
+.mat-column-title {
   width: 32px;
   border-right: 1px solid currentColor;
   padding-right: 24px;
   text-align: center;
+  text-overflow: clip;
+ white-space: nowrap;
 }
 
-.mat-column-demo-description {
+.mat-column-description {
   padding-left: 16px;
   font-size: 20px;
   border-right: 1px solid currentColor;
+  text-align: center;
+
 
 }
 
-.mat-column-demo-price {
+.mat-column-price {
   font-style: italic;
   border-right: 1px solid currentColor;
 
 }
 
-.mat-column-demo-rating {
+.mat-column-rating {
   width: 32px;
   text-align: center;
   font-weight: bold;
   border-right: 1px solid currentColor;
 
 }
-.mat-column-demo-tags{
+.mat-column-tags{
   width: 32px;
   text-align: center;
   font-weight: bold;
   border-right: 1px solid currentColor;
 
 }
-.mat-column-demo-brands{
+.mat-column-brands{
   width: 32px;
   text-align: center;
   font-weight: bold;
   border-right: 1px solid currentColor;
 
 }
-.demo-paginator {
-  width: 500px;
-  margin-left: 30% ;
+.paginator {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
   background-color:#f9AA33;
   flex-wrap: wrap;
 }
