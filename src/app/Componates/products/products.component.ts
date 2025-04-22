@@ -33,8 +33,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageSizeOptions = [5, 10, 20];
   search = "";
-  sortBy = "";
-  order = "";
   isLoading = signal(true);
   isFiltering = signal(false);
 
@@ -71,15 +69,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       }
     })
   }
-  // onSearch(event: Event) {
-  //   this.isLoading.set(true)
-  //   this.isFiltering.set(true)
-  //   const filterValue = (event.target as HTMLInputElement).value;
-  //   this.productParams.search = filterValue.trim().toLowerCase();
-  //   this.getProducts();
-  //   this.isFiltering.set(false);
-  //   this.isLoading.set(false)
-  // }
   applyFilter(event: Event) {
     debugger
     const filterValue = (event.target as HTMLInputElement).value;
