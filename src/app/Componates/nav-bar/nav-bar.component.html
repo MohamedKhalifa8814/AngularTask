@@ -2,19 +2,31 @@
 
   <mat-toolbar class="one">
     <div>
-      <mat-icon>add_shopping_cart</mat-icon> <!-- Alternative icon -->
+      <mat-icon>add_shopping_cart</mat-icon>
 
       <span> Your Shop </span>
 
-      <mat-icon>shopping_basket</mat-icon> <!-- Another alternative -->
+      <mat-icon>shopping_basket</mat-icon>
     </div>
     <div class="nav">
-      <span> Home .. </span>
-      <span> Shop .. </span>
-      <span> Contact .. </span>
+      <a mat-list-item class="one0" routerLink="/home" routerLinkActive="active">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+      </a>
+      <a class="one0" routerLink="/products" routerLinkActive="active">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Products</span>
+      </a>
+      <a class="one0" routerLink="/login" routerLinkActive="active">
+        <mat-icon>login</mat-icon>
+        <span>Login</span>
+      </a>
 
-      <span> LogIn </span>
-      <span> SignIn </span>
+      <a class="one0" routerLink="/logout" routerLinkActive="active">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </a>
+
     </div>
 
 

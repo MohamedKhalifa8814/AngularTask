@@ -1,17 +1,18 @@
-import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild, } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild, DestroyRef, inject } from '@angular/core';
 import { IProduct } from '../../Interface/iproducts';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ProductsService } from './products.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProductParams } from '../../Interface/productparams';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-products',
@@ -35,6 +36,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   search = "";
   isLoading = signal(true);
   isFiltering = signal(false);
+  destroyRef = inject(DestroyRef);
 
   // @ViewChild('search') searchTerm!: ElementRef;
   // @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -56,7 +58,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.productParams.limit = this.pageSize;
     this.productParams.skip = this.pageIndex * this.pageSize;
 
-    this.productSevice.getProduct(this.productParams,).subscribe({
+    this.productSevice.getProduct(this.productParams).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res: any) => {
         this.productLength = res.total;
         this.dataSource.data = res.products;
